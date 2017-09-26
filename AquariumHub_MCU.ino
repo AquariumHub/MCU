@@ -1,7 +1,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <ArduinoJson.h>
-#include <Bridge.h>
 
 // Data wire is plugged into pin 10 on the Arduino
 const int PIN_ONE_WIRE = 10;  // one-wire (DS18B20) 接腳
@@ -11,6 +10,7 @@ volatile unsigned long count = 0;
 unsigned long oldcount = 0;
 unsigned long t = 0;
 unsigned long last;
+unsigned long lightFrequencyValue = 0;
 
 const int CMD_A360 = 1;
 
@@ -37,7 +37,6 @@ void setup(void)
   pinMode(7, INPUT);  // light frequency
   digitalWrite(7, HIGH);
   attachInterrupt(4, irq, RISING);
-  Bridge.begin();
 }
 
 void loop(void)
@@ -69,7 +68,7 @@ void loop(void)
     unsigned long denominator = millis() - last;
     last = millis();
     t = count;
-    unsigned long lightFrequencyValue = (t - oldcount) * 1000 / denominator;
+    lightFrequencyValue = (t - oldcount) * 1000 / denominator;
     Serial.print("Frequency: "); 
     Serial.print(lightFrequencyValue);
     Serial.print("\t = "); 
@@ -77,13 +76,12 @@ void loop(void)
     Serial.println(" mW/m2");
     oldcount = t;
 
-    // MCU to MPU
-    Bridge.put("LightFrequency", String(lightFrequencyValue));
   }
 
   // MCU to MPU
-  Bridge.put("Temperature", String(temperatureValue));
-  Bridge.put("Brightness", String(brightnessValue));
+  Serial1.println("{\"Temperature\":" + String(temperatureValue) + 
+                  ", \"Brightness\":" + String(brightnessValue) + 
+                  ", \"LightFrequency\":" + String(lightFrequencyValue) + "}");
 
   // deal with json commands from the aws or android app
   if (Serial1.available() > 0)
