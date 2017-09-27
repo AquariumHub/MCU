@@ -44,24 +44,24 @@ void loop(void)
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
 
-  Serial.print("\nRequesting temperatures...");
+  //Serial.print("\nRequesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperature readings
-  Serial.println("DONE");
+  //Serial.println("DONE");
 
-  Serial.print("Temperature is: ");
+  //Serial.print("Temperature is: ");
   float temperatureValue = sensors.getTempCByIndex(0); // Why "byIndex"?
   // You can have more than one DS18B20 on the same bus.
   // 0 refers to the first IC on the wire
-  Serial.println(temperatureValue);
+  //Serial.println(temperatureValue);
 
   int brightnessValue = analogRead(PIN_LIGHT_SENSOR);
-  Serial.print("Brightness sensor_1 value = ");
-  Serial.println(brightnessValue);
+  /*Serial.print("Brightness sensor_1 value = ");
+  Serial.println(brightnessValue);*/
 
   int val;
   val=analogRead(0);   //connect grayscale sensor to Analog 0
-  Serial.print("Brightness sensor_2 value: ");
-  Serial.println(val,DEC);//print the value to serial
+  /*Serial.print("Brightness sensor_2 value: ");
+  Serial.println(val,DEC);//print the value to serial*/
 
   if (millis() - last >= 1000)
   {
@@ -69,11 +69,11 @@ void loop(void)
     last = millis();
     t = count;
     lightFrequencyValue = (t - oldcount) * 1000 / denominator;
-    Serial.print("Frequency: "); 
+    /*Serial.print("Frequency: "); 
     Serial.print(lightFrequencyValue);
     Serial.print("\t = "); 
     Serial.print((lightFrequencyValue+50)/100);  // +50 == rounding last digit
-    Serial.println(" mW/m2");
+    Serial.println(" mW/m2");*/
     oldcount = t;
 
   }
@@ -91,15 +91,15 @@ void loop(void)
 
     //read string from MPU
     str = Serial1.readStringUntil('\n');
-    Serial.println(str);
+    //Serial.println(str);
 
     JsonObject& root = jsonBuffer.parseObject(str);
     if (!root.success())
     {
-      Serial.println("parseObject() failed");
+      //Serial.println("parseObject() failed");
       return;
     }
-    Serial.println("parseObject() succeed");
+    //Serial.println("parseObject() succeed");
 
     int cmd = root["cmd"];
 
@@ -112,9 +112,7 @@ void loop(void)
       analogWrite(6, (color / 100.0) * 255);
     }
   }
-  else
-    Serial.println("Serial1 is not available...");
 
-  delay(0);
+  delay(50);
 }
 
