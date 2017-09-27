@@ -36,7 +36,7 @@ void setup(void)
   sensors.begin();
   pinMode(7, INPUT);  // light frequency
   digitalWrite(7, HIGH);
-  attachInterrupt(4, irq, RISING);
+  attachInterrupt(digitalPinToInterrupt(4), irq, RISING);
 }
 
 void loop(void)
@@ -48,8 +48,9 @@ void loop(void)
   sensors.requestTemperatures(); // Send the command to get temperature readings
   //Serial.println("DONE");
 
-  //Serial.print("Temperature is: ");
-  float temperatureValue = sensors.getTempCByIndex(0); // Why "byIndex"?
+
+  Serial.print("Temperature is: ");
+  float temperatureValue = sensors.getTempCByIndex(0);
   // You can have more than one DS18B20 on the same bus.
   // 0 refers to the first IC on the wire
   //Serial.println(temperatureValue);
@@ -60,8 +61,10 @@ void loop(void)
 
   int val;
   val=analogRead(0);   //connect grayscale sensor to Analog 0
+
   /*Serial.print("Brightness sensor_2 value: ");
   Serial.println(val,DEC);//print the value to serial*/
+
 
   if (millis() - last >= 1000)
   {
@@ -72,10 +75,11 @@ void loop(void)
     /*Serial.print("Frequency: "); 
     Serial.print(lightFrequencyValue);
     Serial.print("\t = "); 
+
     Serial.print((lightFrequencyValue+50)/100);  // +50 == rounding last digit
     Serial.println(" mW/m2");*/
-    oldcount = t;
 
+    oldcount = t;
   }
 
   // MCU to MPU
@@ -83,7 +87,7 @@ void loop(void)
                   ", \"Brightness\":" + String(brightnessValue) + 
                   ", \"LightFrequency\":" + String(lightFrequencyValue) + "}");
 
-  // deal with json commands from the aws or android app
+  // deal with json commands from aws or android app
   if (Serial1.available() > 0)
   {
     // Json Buffer, do not reuse or let it global var
