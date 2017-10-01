@@ -36,7 +36,7 @@ void setup(void)
   sensors.begin();
   pinMode(7, INPUT);  // light frequency
   digitalWrite(7, HIGH);
-  attachInterrupt(digitalPinToInterrupt(4), irq, RISING);
+  attachInterrupt(4, irq, RISING);
 }
 
 void loop(void)
@@ -49,7 +49,7 @@ void loop(void)
   //Serial.println("DONE");
 
 
-  Serial.print("Temperature is: ");
+  //Serial.print("Temperature is: ");
   float temperatureValue = sensors.getTempCByIndex(0);
   // You can have more than one DS18B20 on the same bus.
   // 0 refers to the first IC on the wire
@@ -82,6 +82,9 @@ void loop(void)
     oldcount = t;
   }
 
+  Serial.println("{\"Temperature\":" + String(temperatureValue) + 
+                  ", \"Brightness\":" + String(brightnessValue) + 
+                  ", \"LightFrequency\":" + String(lightFrequencyValue) + "}");
   // MCU to MPU
   Serial1.println("{\"Temperature\":" + String(temperatureValue) + 
                   ", \"Brightness\":" + String(brightnessValue) + 
@@ -111,7 +114,7 @@ void loop(void)
     {
       int intensity = root["intensity"];
       int color = root["color"];
-      Serial.println(String(intensity) + " " + String(color));
+      //Serial.println(String(intensity) + " " + String(color));
       analogWrite(5, (intensity / 100.0) * 255);
       analogWrite(6, (color / 100.0) * 255);
     }
