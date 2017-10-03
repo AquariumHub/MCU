@@ -36,7 +36,7 @@ void setup(void)
   sensors.begin();
   pinMode(7, INPUT);  // light frequency
   digitalWrite(7, HIGH);
-  attachInterrupt(4, irq, RISING);
+  attachInterrupt(digitalPinToInterrupt(7), irq, RISING);
 }
 
 void loop(void)
@@ -47,7 +47,6 @@ void loop(void)
   //Serial.print("\nRequesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperature readings
   //Serial.println("DONE");
-
 
   //Serial.print("Temperature is: ");
   float temperatureValue = sensors.getTempCByIndex(0);
@@ -65,7 +64,6 @@ void loop(void)
   /*Serial.print("Brightness sensor_2 value: ");
   Serial.println(val,DEC);//print the value to serial*/
 
-
   if (millis() - last >= 1000)
   {
     unsigned long denominator = millis() - last;
@@ -82,9 +80,9 @@ void loop(void)
     oldcount = t;
   }
 
-  Serial.println("{\"Temperature\":" + String(temperatureValue) + 
+  /*Serial.println("{\"Temperature\":" + String(temperatureValue) + 
                   ", \"Brightness\":" + String(brightnessValue) + 
-                  ", \"LightFrequency\":" + String(lightFrequencyValue) + "}");
+                  ", \"LightFrequency\":" + String(lightFrequencyValue) + "}");*/
   // MCU to MPU
   Serial1.println("{\"Temperature\":" + String(temperatureValue) + 
                   ", \"Brightness\":" + String(brightnessValue) + 
